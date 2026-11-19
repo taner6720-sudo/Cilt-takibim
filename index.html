@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#34483e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Cilt Takibim">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Cilt Takibim</title>
+<style>
+:root{--ink:#24352d;--muted:#718078;--bg:#f5f6f2;--card:#fff;--line:#e2e8e1;--green:#486454;--pale:#eaf0e9}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 16px calc(24px + env(safe-area-inset-bottom))}
+main{max-width:600px;margin:auto}.hero{background:linear-gradient(130deg,#34483e,#829786);color:white;padding:24px;border-radius:24px;margin:12px 0 18px}.eyebrow{font-size:11px;letter-spacing:2px;opacity:.8}.hero h1{margin:8px 0;font-size:28px}.muted{color:var(--muted)}.hero .muted{color:#e5eee6}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}.days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.days button{padding:10px 2px;border:1px solid var(--line);background:white;border-radius:10px;color:var(--ink);font-size:12px}.days button.active{background:var(--green);color:white;border-color:var(--green)}h2{font-size:18px;margin:0 0 12px}.task{display:flex;gap:11px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}.task:last-child{border:0}.task input{width:20px;height:20px;accent-color:var(--green);margin:1px 0 0}.task small{display:block;color:var(--muted);margin-top:3px;line-height:1.4}.pill{display:inline-block;background:var(--pale);color:var(--green);padding:5px 9px;border-radius:20px;font-size:12px}.bar{height:8px;background:#e6ebe5;border-radius:20px;overflow:hidden;margin-top:10px}.bar span{display:block;height:100%;background:#fff;width:0}.hero .bar{background:#ffffff50}.hero .bar span{background:white}.btn{border:1px solid var(--line);background:white;color:var(--ink);border-radius:12px;padding:12px;font-weight:600}.note{font-size:13px;line-height:1.5}.footer{text-align:center;font-size:12px;color:var(--muted);padding:16px}
+</style>
+</head>
+<body><main>
+<section class="hero">
+<div class="eyebrow">PERSONAL SKINCARE</div><h1>Cilt Takibim</h1><div class="muted">Daha pürüzsüz · Daha canlı · Daha bakımlı</div>
+<div style="display:flex;justify-content:space-between;align-items:end;margin-top:22px"><div><div class="eyebrow">BUGÜN TAMAMLANAN</div><strong id="pct" style="font-size:30px">0%</strong></div><div id="date" class="muted"></div></div><div class="bar"><span id="progress"></span></div>
+</section>
+<section class="card"><h2>Haftalık takvim</h2><div class="days" id="days"></div></section>
+<section class="card"><h2>☀️ Sabah rutini</h2><div id="morning"></div></section>
+<section class="card"><h2>🌙 Akşam rutini</h2><div id="evening"></div></section>
+<section class="card"><h2>📸 Haftalık kontrol</h2><label class="task"><input type="checkbox" id="photo"><span>Bu haftanın fotoğrafını çektim<small>Aynı ışıkta, filtresiz ve aynı açıdan karşılaştır.</small></span></label></section>
+<section class="card"><h2>Ürün rehberim</h2>
+<div class="task"><span>🫧 <b>Celenes temizleyici</b><small>Sabah ve akşam; cilt gerilirse sabah yalnızca su.</small></span></div>
+<div class="task"><span>💧 <b>The Purest Niacinamide %5 + Zinc PCA %1</b><small>Takvimde belirtilen sabahlarda.</small></span></div>
+<div class="task"><span>🌙 <b>The Purest Retinol %0,3 + Ceramide</b><small>İlk hafta yalnızca Çarşamba akşamı; tamamen kuru cilde, az miktarda.</small></span></div>
+<div class="task"><span>🧴 <b>Simple Hydrating Light Moisturiser</b><small>Nemlendirici.</small></span></div>
+<div class="task"><span>☀️ <b>La Roche-Posay Anthelios UVMune 400 SPF50+</b><small>Her sabah; dışarıda kalındığında yaklaşık 2 saatte bir yenile.</small></span></div>
+<div class="task"><span>🧖 <b>L’Oréal Elseve Hyaluron Plump</b><small>Saç bakım ürünü; yüz rutininden ayrı.</small></span></div>
+</section>
+<section class="card note"><b>Önemli:</b> Retinolü ilk hafta bir geceyle sınırla. Tahriş, belirgin yanma veya soyulma olursa bırak ve cilt toparlanana kadar yalnızca nazik temizleme/nemlendirme/SPF uygula. Retinol gecesinde başka güçlü aktif veya peeling kullanma. Göz çevresi, burun kıvrımları ve dudak kenarlarından uzak tut. Ürün etiketindeki talimatları esas al.</section>
+<section style="display:flex;gap:8px"><button class="btn" id="resetDay" style="flex:1">Bugünü sıfırla</button><button class="btn" id="resetAll" style="flex:1">Tüm takvimi sıfırla</button></section>
+<div class="footer">Veriler bu cihazın tarayıcısında saklanır. Tarayıcı verilerini silersen takip kayıtları kaybolabilir.</div>
+</main>
+<script>
+const plan=[
+ {name:"Pazartesi",m:["Celenes ile yüzü nazikçe yıka","Niacinamide serum","Simple nemlendirici","SPF 50+"],e:["Celenes ile yüzü yıka","Simple nemlendirici"]},
+ {name:"Salı",m:["Celenes ile yüzü nazikçe yıka","Simple nemlendirici","SPF 50+"],e:["Celenes ile yüzü yıka","Simple nemlendirici"]},
+ {name:"Çarşamba",m:["Celenes ile yüzü nazikçe yıka","Simple nemlendirici","SPF 50+"],e:["Celenes ile yüzü yıka ve tamamen kurula","Retinol %0,3 (ilk hafta tek gece)","Simple nemlendirici"]},
+ {name:"Perşembe",m:["Celenes ile yüzü nazikçe yıka","Simple nemlendirici","SPF 50+"],e:["Celenes ile yüzü yıka","Simple nemlendirici"]},
+ {name:"Cuma",m:["Celenes ile yüzü nazikçe yıka","Niacinamide serum","Simple nemlendirici","SPF 50+"],e:["Celenes ile yüzü yıka","Simple nemlendirici"]},
+ {name:"Cumartesi",m:["Celenes ile yüzü nazikçe yıka","Simple nemlendirici","SPF 50+"],e:["Celenes ile yüzü yıka","Simple nemlendirici"]},
+ {name:"Pazar",m:["Celenes ile yüzü nazikçe yıka","Niacinamide serum","Simple nemlendirici","SPF 50+"],e:["Celenes ile yüzü yıka","Simple nemlendirici"]}
+];
+const key="cilt-takibim-v1";let saved=JSON.parse(localStorage.getItem(key)||'{}');
+let selected=(new Date().getDay()+6)%7;
+function save(){localStorage.setItem(key,JSON.stringify(saved));render()}
+function checked(id){return !!saved[selected+"-"+id]}
+function taskList(items,prefix){return items.map((t,i)=>`<label class="task"><input type="checkbox" data-id="${prefix}${i}" ${checked(prefix+i)?"checked":""}><span>${t}</span></label>`).join("")}
+function render(){
+ document.querySelector("#days").innerHTML=plan.map((d,i)=>`<button data-day="${i}" class="${i===selected?"active":""}">${["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"][i]}</button>`).join("");
+ document.querySelector("#date").textContent=plan[selected].name;
+ document.querySelector("#morning").innerHTML=taskList(plan[selected].m,"m");
+ document.querySelector("#evening").innerHTML=taskList(plan[selected].e,"e");
+ document.querySelector("#photo").checked=!!saved[selected+"-photo"];
+ const inputs=[...document.querySelectorAll('#morning input,#evening input')];let n=inputs.length,done=inputs.filter(x=>x.checked).length,p=n?Math.round(done/n*100):0;
+ document.querySelector("#pct").textContent=p+"%";document.querySelector("#progress").style.width=p+"%";
+ document.querySelectorAll("[data-day]").forEach(b=>b.onclick=()=>{selected=+b.dataset.day;render()});
+ inputs.forEach(x=>x.onchange=()=>{saved[selected+"-"+x.dataset.id]=x.checked;save()});
+ document.querySelector("#photo").onchange=e=>{saved[selected+"-photo"]=e.target.checked;localStorage.setItem(key,JSON.stringify(saved))};
+}
+document.querySelector("#resetDay").onclick=()=>{Object.keys(saved).filter(k=>k.startsWith(selected+"-")).forEach(k=>delete saved[k]);save()};
+document.querySelector("#resetAll").onclick=()=>{if(confirm("Tüm haftalık işaretlemeler silinsin mi?")){saved={};save()}};
+render();
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+</script>
+</body></html>
